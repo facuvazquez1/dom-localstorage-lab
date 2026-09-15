@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>01 - Selección y Eventos</title>
+
+  <style>
+    body.oscuro {
+    background-color: #1a1a1a;
+    color: #f0f0f0;
+    }
+  </style>
+  
+</head>
+<body ">
+  <h1 id="titulo">Lista de tareas</h1>
+
+  <button id="toggle-tema">Cambiar tema</button>
+
+  <div>
+    <input type="text" id="input-tarea" placeholder="Nueva tarea">
+    <button id="agregar-btn">Agregar</button>
+  </div>
+
+  <ul id="lista-tareas">
+    <li class="tarea">Comprar pan <button class="eliminar-btn">Eliminar</button></li>
+    <li class="tarea">Estudiar DOM <button class="eliminar-btn">Eliminar</button></li>
+    <li class="tarea">Hacer ejercicio <button class="eliminar-btn">Eliminar</button></li>
+  </ul>
+
+  <script src="01-seleccion-y-eventos.js" defer></script>
+</body>
+</html>
