@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rick and Morty API</title>
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <h1>Rick and Morty API</h1>
+
+    <!-- Buscador de personajes -->
+    <h2>Buscador de personajes</h2>
+    <form id="form-buscador">
+      <input
+        type="text"
+        name="buscador"
+        id="buscador"
+        placeholder="Ingrese un nombre"
+      />
+      <button type="submit" id="btn-buscar">Buscar</button>
+    </form>
+
+    <!-- Seccion de personajes -->
+    <h3>Personajes</h3>
+
+    <div id="cart-personajes"></div>
+
+    <!-- Seccion de favoritos -->
+    <h3>Personajes favoritos</h3>
+
+    <div id="cart-favoritos"></div>
+
+    <script type="module" src="script.js"></script>
+  </body>
+</html>
