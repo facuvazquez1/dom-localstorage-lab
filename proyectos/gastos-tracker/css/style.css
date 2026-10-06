@@ -1,0 +1,439 @@
+/* ==========================================================
+   GASTOS TRACKER: estilos base
+   ----------------------------------------------------------
+   Marcado que este CSS espera para CADA GASTO de la lista
+   (lo generás vos desde JS dentro de #lista-gastos):
+
+   <li class="gasto" data-id="...">
+     <div class="gasto__info">
+       <span class="gasto__descripcion">Supermercado</span>
+       <span class="gasto__meta">
+         <span class="badge badge--comida">comida</span>
+         <span class="gasto__fecha">05/10/2026</span>
+       </span>
+     </div>
+     <span class="gasto__monto">$ 15.200,50</span>
+     <div class="gasto__acciones">
+       <button class="btn btn--secundario btn--chico" data-accion="editar" data-id="...">Editar</button>
+       <button class="btn btn--peligro btn--chico" data-accion="eliminar" data-id="...">Eliminar</button>
+     </div>
+   </li>
+
+   Clases de estado:
+   - .gasto--editando  → resalta la fila que se está editando
+   - .oculto           → oculta un elemento (usar con classList)
+
+   Totales por categoría (dentro de #totales-categoria):
+
+   <div class="total-item">
+     <span class="badge badge--comida">comida</span>
+     <span class="total-item__monto">$ 15.200,50</span>
+   </div>
+
+   Mensajes: #error-form y #mensaje-vacio se ocultan solos cuando
+   están vacíos. Alcanza con asignarles textContent (o "" para limpiar).
+   ========================================================== */
+
+/* ---------- Variables ---------- */
+:root {
+  --bg: #f4f6fa;
+  --surface: #ffffff;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --danger: #dc2626;
+  --danger-hover: #b91c1c;
+  --danger-bg: #fef2f2;
+  --warning-bg: #fffbeb;
+  --warning-border: #f59e0b;
+
+  --radius: 10px;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* ---------- Reset mínimo ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+/* ---------- Layout general ---------- */
+.contenedor {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+}
+
+main {
+  display: grid;
+  gap: 1rem;
+}
+
+.encabezado {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.encabezado h1 {
+  font-size: 1.75rem;
+}
+
+.encabezado__sub {
+  color: var(--muted);
+}
+
+.pie {
+  margin-top: 2rem;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+/* ---------- Tarjeta (cada sección) ---------- */
+.tarjeta {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.25rem;
+}
+
+.tarjeta h2 {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+/* ---------- Formularios y campos ---------- */
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.campo label {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  font: inherit;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+input:focus,
+select:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+  border-color: var(--primary);
+}
+
+.form {
+  display: grid;
+  gap: 1rem;
+}
+
+.form__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* Mensaje de error del formulario: se oculta si está vacío */
+.mensaje-error {
+  padding: 0.6rem 0.75rem;
+  color: var(--danger);
+  background: var(--danger-bg);
+  border: 1px solid var(--danger);
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.mensaje-error:empty {
+  display: none;
+}
+
+/* ---------- Botones ---------- */
+.btn {
+  padding: 0.6rem 1rem;
+  font: inherit;
+  font-weight: 600;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.btn--primario {
+  color: #fff;
+  background: var(--primary);
+}
+
+.btn--primario:hover {
+  background: var(--primary-hover);
+}
+
+.btn--secundario {
+  color: var(--text);
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+.btn--secundario:hover {
+  background: var(--bg);
+}
+
+.btn--peligro {
+  color: var(--danger);
+  background: var(--surface);
+  border-color: var(--danger);
+}
+
+.btn--peligro:hover {
+  color: #fff;
+  background: var(--danger);
+}
+
+.btn--chico {
+  padding: 0.35rem 0.7rem;
+  font-size: 0.85rem;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* ---------- Filtros ---------- */
+.filtros {
+  display: grid;
+  gap: 1rem;
+}
+
+.filtros__limpiar {
+  justify-self: start;
+}
+
+/* ---------- Resumen ---------- */
+.resumen {
+  display: grid;
+  gap: 1rem;
+}
+
+.resumen__total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.resumen__etiqueta {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.resumen__monto {
+  font-size: 1.75rem;
+}
+
+.totales {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.total-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.total-item__monto {
+  font-weight: 600;
+}
+
+/* ---------- Lista de gastos ---------- */
+.lista {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gasto {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.5rem 1rem;
+  align-items: center;
+  padding: 0.85rem 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  border-radius: 8px;
+}
+
+.gasto__info {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.gasto__descripcion {
+  font-weight: 600;
+}
+
+.gasto__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.gasto__monto {
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-align: right;
+}
+
+.gasto__acciones {
+  display: flex;
+  gap: 0.5rem;
+  grid-column: 1 / -1; /* en pantalla chica van debajo */
+}
+
+/* Fila que se está editando */
+.gasto--editando {
+  background: var(--warning-bg);
+  border-color: var(--warning-border);
+  border-left-color: var(--warning-border);
+}
+
+/* Estado vacío: se oculta si no tiene texto */
+.mensaje-vacio {
+  padding: 1.5rem 1rem;
+  color: var(--muted);
+  text-align: center;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+}
+
+.mensaje-vacio:empty {
+  display: none;
+}
+
+/* ---------- Badges de categoría ---------- */
+.badge {
+  display: inline-block;
+  padding: 0.1rem 0.55rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  border-radius: 999px;
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.badge--comida {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.badge--transporte {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.badge--servicios {
+  background: #ede9fe;
+  color: #5b21b6;
+}
+
+.badge--ocio {
+  background: #fce7f3;
+  color: #9d174d;
+}
+
+.badge--salud {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.badge--otros {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+/* ---------- Utilidades ---------- */
+.oculto {
+  display: none;
+}
+
+/* ==========================================================
+   RESPONSIVE: a partir de 640px
+   ========================================================== */
+@media (min-width: 640px) {
+  .tarjeta {
+    padding: 1.5rem;
+  }
+
+  /* Formulario en 3 columnas; la descripción ocupa todo el ancho */
+  .form {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .campo--ancho,
+  .mensaje-error,
+  .form__acciones {
+    grid-column: 1 / -1;
+  }
+
+  /* Filtros en una sola fila */
+  .filtros {
+    grid-template-columns: repeat(3, 1fr) auto;
+    align-items: end;
+  }
+
+  .filtros__limpiar {
+    justify-self: stretch;
+  }
+
+  /* Totales por categoría en dos columnas */
+  .totales {
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 2rem;
+  }
+
+  /* Fila de gasto: info | monto | acciones */
+  .gasto {
+    grid-template-columns: 1fr auto auto;
+  }
+
+  .gasto__acciones {
+    grid-column: auto;
+  }
+}

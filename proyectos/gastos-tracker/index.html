@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gastos Tracker</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="contenedor">
+      <header class="encabezado">
+        <h1>Gastos Tracker</h1>
+        <p class="encabezado__sub">Registrá, filtrá y controlá tus gastos.</p>
+      </header>
+
+      <main>
+        <!-- ============ FORMULARIO (alta y edición) ============ -->
+        <section class="tarjeta" aria-labelledby="titulo-form">
+          <h2 id="titulo-form">Nuevo gasto</h2>
+
+          <form id="form-gasto" class="form" novalidate>
+            <div class="campo campo--ancho">
+              <label for="descripcion">Descripción</label>
+              <input
+                type="text"
+                id="descripcion"
+                name="descripcion"
+                placeholder="Ej: Supermercado"
+              />
+            </div>
+
+            <div class="campo">
+              <label for="monto">Monto</label>
+              <input
+                type="number"
+                id="monto"
+                name="monto"
+                placeholder="0,00"
+                step="0.01"
+              />
+            </div>
+
+            <div class="campo">
+              <label for="categoria">Categoría</label>
+              <select id="categoria" name="categoria">
+                <option value="" selected disabled>Elegí una categoría</option>
+                <option value="comida">Comida</option>
+                <option value="transporte">Transporte</option>
+                <option value="servicios">Servicios</option>
+                <option value="ocio">Ocio</option>
+                <option value="salud">Salud</option>
+                <option value="otros">Otros</option>
+              </select>
+            </div>
+
+            <div class="campo">
+              <label for="fecha">Fecha</label>
+              <input type="date" id="fecha" name="fecha" />
+            </div>
+
+            <!-- Se muestra solo si tiene texto (ver style.css) -->
+            <p id="error-form" class="mensaje-error" role="alert"></p>
+
+            <div class="form__acciones">
+              <button type="submit" id="btn-guardar" class="btn btn--primario">
+                Agregar gasto
+              </button>
+              <!-- Para el modo edición: mostrarlo/ocultarlo con la clase "oculto" -->
+              <button
+                type="button"
+                id="btn-cancelar"
+                class="btn btn--secundario oculto"
+              >
+                Cancelar edición
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <!-- ============ FILTROS ============ -->
+        <section class="tarjeta" aria-labelledby="titulo-filtros">
+          <h2 id="titulo-filtros">Filtros</h2>
+
+          <div class="filtros">
+            <div class="campo">
+              <label for="filtro-categoria">Categoría</label>
+              <select id="filtro-categoria">
+                <option value="todas" selected>Todas</option>
+                <option value="comida">Comida</option>
+                <option value="transporte">Transporte</option>
+                <option value="servicios">Servicios</option>
+                <option value="ocio">Ocio</option>
+                <option value="salud">Salud</option>
+                <option value="otros">Otros</option>
+              </select>
+            </div>
+
+            <div class="campo">
+              <label for="filtro-desde">Desde</label>
+              <input type="date" id="filtro-desde" />
+            </div>
+
+            <div class="campo">
+              <label for="filtro-hasta">Hasta</label>
+              <input type="date" id="filtro-hasta" />
+            </div>
+
+            <button
+              type="button"
+              id="btn-limpiar-filtros"
+              class="btn btn--secundario filtros__limpiar"
+            >
+              Limpiar filtros
+            </button>
+          </div>
+        </section>
+
+        <!-- ============ RESUMEN (totales) ============ -->
+        <section class="tarjeta" aria-labelledby="titulo-resumen">
+          <h2 id="titulo-resumen">Resumen</h2>
+
+          <div class="resumen">
+            <div class="resumen__total">
+              <span class="resumen__etiqueta">Total</span>
+              <strong id="total-general" class="resumen__monto">$ 0,00</strong>
+            </div>
+
+            <!-- Acá se dibujan los totales por categoría -->
+            <div id="totales-categoria" class="totales"></div>
+          </div>
+        </section>
+
+        <!-- ============ LISTA DE GASTOS ============ -->
+        <section class="tarjeta" aria-labelledby="titulo-lista">
+          <h2 id="titulo-lista">Gastos</h2>
+
+          <!-- Estado vacío: se muestra solo si tiene texto (ver style.css) -->
+          <p id="mensaje-vacio" class="mensaje-vacio"></p>
+
+          <ul id="lista-gastos" class="lista"></ul>
+        </section>
+      </main>
+
+      <footer class="pie">
+        <p>Hecho con HTML, CSS y JavaScript.</p>
+      </footer>
+    </div>
+
+    <script defer src="script.js"></script>
+  </body>
+</html>
