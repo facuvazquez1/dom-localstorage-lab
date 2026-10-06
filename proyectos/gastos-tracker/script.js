@@ -1,6 +1,9 @@
-// ELEMENTOS DEL DOM
+// -------------- ELEMENTOS DEL DOM -----------
 
-// ESTADO
+const listaGastos = document.querySelector("#lista-gastos");
+
+
+// ------------------ ESTADO ------------------
 
 let gastos = [
     {
@@ -26,6 +29,7 @@ let gastos = [
     }
 ];
 
+// Funcion: Construir el HTML de una fila
 function crearFilaGasto(gasto) {
 
     // retornamos el template del li con el gasto y su informacion
@@ -46,6 +50,15 @@ function crearFilaGasto(gasto) {
    </li>`
 };
 
-// RENDER
+// ------------------ RENDER ------------------
 
-// ARRANQUE
+// Funcion: Dibujar la lista completa en pantalla
+function renderLista(lista)  {  // transformar, unir y dibujar
+
+  const filas = lista.map(gasto => crearFilaGasto(gasto))
+  return filas
+}
+
+console.log(renderLista(gastos))
+
+// ------------------ ARRANQUE ----------------
