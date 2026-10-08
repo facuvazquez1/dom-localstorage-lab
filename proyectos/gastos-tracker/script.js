@@ -2,6 +2,7 @@
 
 const listaGastos = document.querySelector("#lista-gastos");
 const formGasto = document.querySelector("#form-gasto");
+const mensajeError = document.querySelector("#error-form");
 
 // ------------------ ESTADO ------------------
 
@@ -83,17 +84,43 @@ function renderLista(lista) {
   listaGastos.innerHTML = html;
 }
 
+function mostrarError(mensajes) {
+  mensajeError.textContent = mensajes.join(" ");
+}
+
 // ------------------ EVENTOS ------------------
 formGasto.addEventListener("submit", (event) => {
   event.preventDefault();
   const datos = new FormData(formGasto); // guardamos los datos del formulario en una variable para acceder a los name mediante get
 
-  const descripcion = datos.get("descripcion");
+  const descripcion = datos.get("descripcion").trim();
   const monto = Number(datos.get("monto")); // convertimos monto a numero
   const categoria = datos.get("categoria");
   const fecha = datos.get("fecha");
 
-  console.log(validarGasto(descripcion, monto, categoria, fecha))
+  const resultadoValidacion = validarGasto(
+    descripcion,
+    monto,
+    categoria,
+    fecha,
+  );
+  mostrarError(resultadoValidacion);
+  if (resultadoValidacion.length > 0) {
+    return;
+  }
+
+  const nuevoGasto = {
+    id: Date.now(),
+    descripcion: descripcion,
+    monto: monto,
+    categoria: categoria,
+    fecha: fecha,
+  };
+
+  gastos = [...gastos, nuevoGasto];
+  renderLista(gastos) // renderizamos nuevos gastos
+
+  formGasto.reset() // reseteamos los valores por defecto del form luego de agregar el gasto
 });
 
 // ------------------ ARRANQUE ----------------
