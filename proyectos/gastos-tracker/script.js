@@ -6,29 +6,7 @@ const mensajeError = document.querySelector("#error-form");
 
 // ------------------ ESTADO ------------------
 
-let gastos = [
-  {
-    id: 1,
-    descripcion: "Compra Supermercado Octubre 2026",
-    monto: 170000,
-    categoria: "comida",
-    fecha: "2026-10-02",
-  },
-  {
-    id: 2,
-    descripcion: "Entradas para Bad Bunny",
-    monto: 50000,
-    categoria: "ocio",
-    fecha: "2026-07-28",
-  },
-  {
-    id: 3,
-    descripcion: "Nafta Auto",
-    monto: 25000,
-    categoria: "transporte",
-    fecha: "2026-08-16",
-  },
-];
+let gastos = [];
 
 // ------------------ LOGICA ------------------
 
@@ -54,6 +32,25 @@ function validarGasto(descripcion, monto, categoria, fecha) {
 
   return errores;
 }
+
+// ---------------- PERSISTENCIA --------------
+
+function guardarGastos(lista) {
+  // guardamos en formato string los gastos dentro de la clave gastos
+  localStorage.setItem("gastos", JSON.stringify(lista))
+}
+
+function cargarGastos() {
+  try {
+  return JSON.parse(localStorage.getItem("gastos")) || []; // convertimos la clave guardada a objeto devuelta, y ponemos || [], porque si arranca la aplicacion y la clave todavia no fue creada, devuelva un array vacio.
+  } catch(error){
+    console.error("Los datos del array fallaron al obtenerse.", error)
+    return []
+  }
+}
+
+
+
 
 // ------------------ RENDER ------------------
 
@@ -105,12 +102,13 @@ formGasto.addEventListener("submit", (event) => {
     fecha,
   );
   mostrarError(resultadoValidacion);
-  if (resultadoValidacion.length > 0) {
+  if (resultadoValidacion.length > 0) { // si la validacion tiene algun elemento quiere decir que hay un error y corta conr return
     return;
   }
 
+  
   const nuevoGasto = {
-    id: Date.now(),
+    id: Date.now(), // devuelve la marca de tiempo (timestamp) actual en milisegundos desde el 1 de enero de 1970 a las 00:00:00 UTC
     descripcion: descripcion,
     monto: monto,
     categoria: categoria,
@@ -119,6 +117,8 @@ formGasto.addEventListener("submit", (event) => {
 
   gastos = [...gastos, nuevoGasto];
   renderLista(gastos) // renderizamos nuevos gastos
+
+  guardarGastos(gastos) // guardamos en localStorage los gastos actualizados 
 
   formGasto.reset() // reseteamos los valores por defecto del form luego de agregar el gasto
 });
