@@ -33,15 +33,22 @@ function validarGasto(descripcion, monto, categoria, fecha) {
   return errores;
 }
 
-
 function escaparHtml(texto) {
+  // evita la inyeccion de codigo mediante el campo "descripcion del form"
   return texto
-  .replaceAll("&","&amp;" )
-  .replaceAll("<","&lt;" )
-  .replaceAll(">","&gt;" )
-  .replaceAll('"',"&quot;" ) // comillas doble
-  .replaceAll("'","&#39;" ) // comillas simples
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;") // comillas doble
+    .replaceAll("'", "&#39;"); // comillas simples
 }
+
+function calcularTotal(gasto) {
+  const total = gasto.reduce((acc, gasto) => acc + gasto.monto, 0)
+  return total 
+}
+
+console.log(calcularTotal(gastos))
 
 // ---------------- PERSISTENCIA --------------
 
@@ -80,8 +87,6 @@ function crearFilaGasto(gasto) {
      </div>
    </li>`;
 }
-
-
 
 // Funcion: Dibujar la lista completa en pantalla.
 function renderLista(lista) {
