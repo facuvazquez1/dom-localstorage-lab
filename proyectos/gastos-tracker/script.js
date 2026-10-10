@@ -6,7 +6,7 @@ const mensajeError = document.querySelector("#error-form");
 
 // ------------------ ESTADO ------------------
 
-let gastos = [];
+let gastos = cargarGastos(); // le asignamos los datos de localStorage, si el mismo esta vacio devolvera []
 
 // ------------------ LOGICA ------------------
 
@@ -37,20 +37,17 @@ function validarGasto(descripcion, monto, categoria, fecha) {
 
 function guardarGastos(lista) {
   // guardamos en formato string los gastos dentro de la clave gastos
-  localStorage.setItem("gastos", JSON.stringify(lista))
+  localStorage.setItem("gastos", JSON.stringify(lista));
 }
 
 function cargarGastos() {
   try {
-  return JSON.parse(localStorage.getItem("gastos")) || []; // convertimos la clave guardada a objeto devuelta, y ponemos || [], porque si arranca la aplicacion y la clave todavia no fue creada, devuelva un array vacio.
-  } catch(error){
-    console.error("Los datos del array fallaron al obtenerse.", error)
-    return []
+    return JSON.parse(localStorage.getItem("gastos")) || []; // convertimos la clave guardada a objeto devuelta, y ponemos || [], porque si arranca la aplicacion y la clave todavia no fue creada, devuelva un array vacio.
+  } catch (error) {
+    console.error("Los datos del array fallaron al obtenerse.", error);
+    return [];
   }
 }
-
-
-
 
 // ------------------ RENDER ------------------
 
@@ -102,11 +99,11 @@ formGasto.addEventListener("submit", (event) => {
     fecha,
   );
   mostrarError(resultadoValidacion);
-  if (resultadoValidacion.length > 0) { // si la validacion tiene algun elemento quiere decir que hay un error y corta conr return
+  if (resultadoValidacion.length > 0) {
+    // si la validacion tiene algun elemento quiere decir que hay un error y corta conr return
     return;
   }
 
-  
   const nuevoGasto = {
     id: Date.now(), // devuelve la marca de tiempo (timestamp) actual en milisegundos desde el 1 de enero de 1970 a las 00:00:00 UTC
     descripcion: descripcion,
@@ -116,12 +113,33 @@ formGasto.addEventListener("submit", (event) => {
   };
 
   gastos = [...gastos, nuevoGasto];
-  renderLista(gastos) // renderizamos nuevos gastos
+  renderLista(gastos); // renderizamos nuevos gastos
 
-  guardarGastos(gastos) // guardamos en localStorage los gastos actualizados 
+  guardarGastos(gastos); // guardamos en localStorage los gastos actualizados
 
-  formGasto.reset() // reseteamos los valores por defecto del form luego de agregar el gasto
+  formGasto.reset(); // reseteamos los valores por defecto del form luego de agregar el gasto
 });
+
+
+listaGastos.addEventListener("click", (event) => {
+  const boton = event.target.closest("[data-accion]") // buscamos el boton del elemento lista-gastos
+
+  if(!boton) {  // si no trae un boton, cortar con return 
+    return;
+  }
+
+  const accionBoton = boton.dataset.accion
+  const botonId = Number(boton.dataset.id)
+
+  if (accionBoton === "eliminar") {
+    gastos = gastos.filter((n) => n.id !== botonId)
+    renderLista(gastos)
+    guardarGastos(gastos)
+  
+  }
+})
+
+
 
 // ------------------ ARRANQUE ----------------
 
