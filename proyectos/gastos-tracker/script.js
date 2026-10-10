@@ -33,6 +33,16 @@ function validarGasto(descripcion, monto, categoria, fecha) {
   return errores;
 }
 
+
+function escaparHtml(texto) {
+  return texto
+  .replaceAll("&","&amp;" )
+  .replaceAll("<","&lt;" )
+  .replaceAll(">","&gt;" )
+  .replaceAll('"',"&quot;" ) // comillas doble
+  .replaceAll("'","&#39;" ) // comillas simples
+}
+
 // ---------------- PERSISTENCIA --------------
 
 function guardarGastos(lista) {
@@ -57,7 +67,7 @@ function crearFilaGasto(gasto) {
 
   return `<li class="gasto" data-id="${gasto.id}">
      <div class="gasto__info">
-       <span class="gasto__descripcion">${gasto.descripcion}</span>
+       <span class="gasto__descripcion">${escaparHtml(gasto.descripcion)}</span>
        <span class="gasto__meta">
          <span class="badge badge--${gasto.categoria}">${gasto.categoria}</span>
          <span class="gasto__fecha">${gasto.fecha}</span>
@@ -70,6 +80,8 @@ function crearFilaGasto(gasto) {
      </div>
    </li>`;
 }
+
+
 
 // Funcion: Dibujar la lista completa en pantalla.
 function renderLista(lista) {
@@ -120,26 +132,23 @@ formGasto.addEventListener("submit", (event) => {
   formGasto.reset(); // reseteamos los valores por defecto del form luego de agregar el gasto
 });
 
-
 listaGastos.addEventListener("click", (event) => {
-  const boton = event.target.closest("[data-accion]") // buscamos el boton del elemento lista-gastos
+  const boton = event.target.closest("[data-accion]"); // buscamos el boton del elemento lista-gastos
 
-  if(!boton) {  // si no trae un boton, cortar con return 
+  if (!boton) {
+    // si no trae un boton, cortar con return
     return;
   }
 
-  const accionBoton = boton.dataset.accion
-  const botonId = Number(boton.dataset.id)
+  const accionBoton = boton.dataset.accion;
+  const botonId = Number(boton.dataset.id);
 
   if (accionBoton === "eliminar") {
-    gastos = gastos.filter((n) => n.id !== botonId)
-    renderLista(gastos)
-    guardarGastos(gastos)
-  
+    gastos = gastos.filter((n) => n.id !== botonId);
+    renderLista(gastos);
+    guardarGastos(gastos);
   }
-})
-
-
+});
 
 // ------------------ ARRANQUE ----------------
 
