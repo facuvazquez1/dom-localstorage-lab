@@ -8,15 +8,20 @@ const totalesPorCategoria = document.querySelector("#totales-categoria");
 // ------------------ ESTADO ------------------
 
 let gastos = cargarGastos(); // le asignamos los datos de localStorage, si el mismo esta vacio devolvera []
+let filtros = {
+  categoria: "todas",
+  desde: "",
+  hasta: ""
+}
 
 // ------------------ LOGICA ------------------
 
-function validarGasto(descripcion, monto, categoria, fecha) {
+function validarGasto(categoria, monto, categoria, fecha) {
   // esta funcion permite validar que los campos ingresados del form-gasto cumplan con las condiciones y no generen errores.
   const errores = [];
 
-  if (descripcion.trim() === "") {
-    errores.push("Falta completar el campo descripcion");
+  if (categoria.trim() === "") {
+    errores.push("Falta completar el campo categoria");
   }
 
   if (!(monto > 0)) {
@@ -35,7 +40,7 @@ function validarGasto(descripcion, monto, categoria, fecha) {
 }
 
 function escaparHtml(texto) {
-  // evita la inyeccion de codigo mediante el campo "descripcion del form"
+  // evita la inyeccion de codigo mediante el campo "categoria del form"
   return texto
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
@@ -65,6 +70,15 @@ function formatearMoneda(monto) {
   return formateador.format(monto);
 }
 
+function filtrarGastos(lista, filtros){
+  return lista.filter((gasto) => {
+    const pasaCategoria = gasto.categoria === filtros.categoria || filtros.categoria === "todas";
+    const pasaDesde = gasto.fecha >= filtros.desde || filtros.desde === "";
+    const pasaHasta = gasto.fecha <= filtros.hasta || filtros.hasta === "";
+    return pasaCategoria && pasaDesde && pasaHasta
+  })
+}
+
 // ---------------- PERSISTENCIA --------------
 
 function guardarGastos(lista) {
@@ -89,13 +103,13 @@ function crearFilaGasto(gasto) {
 
   return `<li class="gasto" data-id="${gasto.id}">
      <div class="gasto__info">
-       <span class="gasto__descripcion">${escaparHtml(gasto.descripcion)}</span>
+       <span class="gasto__categoria">${escaparHtml(gasto.categoria)}</span>
        <span class="gasto__meta">
          <span class="badge badge--${gasto.categoria}">${gasto.categoria}</span>
          <span class="gasto__fecha">${gasto.fecha}</span>
        </span>
      </div>
-     <span class="gasto__monto">${gasto.monto}</span>
+     <span class="gasto__monto">${formatearMoneda(gasto.monto)}</span>
      <div class="gasto__acciones">
        <button class="btn btn--secundario btn--chico" data-accion="editar" data-id="${gasto.id}">Editar</button>
        <button class="btn btn--peligro btn--chico" data-accion="eliminar" data-id="${gasto.id}">Eliminar</button>
@@ -122,7 +136,7 @@ function renderResumen(lista) {
   const items = Object.entries(totales).map(
     ([categoria, monto]) => `<div class="total-item">
       <span class="badge badge--${categoria}">${categoria}</span>
-      <span class="total-item__monto">${monto}</span>
+      <span class="total-item__monto">${formatearMoneda(monto)}</span>
     </div>`,
   );
   totalesPorCategoria.innerHTML = items.join("");
@@ -133,13 +147,13 @@ formGasto.addEventListener("submit", (event) => {
   event.preventDefault();
   const datos = new FormData(formGasto); // guardamos los datos del formulario en una variable para acceder a los name mediante get
 
-  const descripcion = datos.get("descripcion").trim();
+  const categoria = datos.get("categoria").trim();
   const monto = Number(datos.get("monto")); // convertimos monto a numero
   const categoria = datos.get("categoria");
   const fecha = datos.get("fecha");
 
   const resultadoValidacion = validarGasto(
-    descripcion,
+    categoria,
     monto,
     categoria,
     fecha,
@@ -152,7 +166,7 @@ formGasto.addEventListener("submit", (event) => {
 
   const nuevoGasto = {
     id: Date.now(), // devuelve la marca de tiempo (timestamp) actual en milisegundos desde el 1 de enero de 1970 a las 00:00:00 UTC
-    descripcion: descripcion,
+    categoria: categoria,
     monto: monto,
     categoria: categoria,
     fecha: fecha,
