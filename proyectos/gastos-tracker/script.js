@@ -55,6 +55,16 @@ function calcularTotalPorCategoria(lista) {
     return acc;
   }, {});
 }
+
+const formateador = new Intl.NumberFormat("es-AR", {
+  style: "currency",
+  currency: "ARS",
+});
+
+function formatearMoneda(monto) {
+  return formateador.format(monto);
+}
+
 // ---------------- PERSISTENCIA --------------
 
 function guardarGastos(lista) {
@@ -106,7 +116,7 @@ function mostrarError(mensajes) {
 
 function renderResumen(lista) {
   const total = calcularTotal(lista);
-  totalGeneral.textContent = total;
+  totalGeneral.textContent = formatearMoneda(total);
 
   const totales = calcularTotalPorCategoria(lista);
   const items = Object.entries(totales).map(
@@ -117,8 +127,6 @@ function renderResumen(lista) {
   );
   totalesPorCategoria.innerHTML = items.join("");
 }
-
-
 
 // ------------------ EVENTOS ------------------
 formGasto.addEventListener("submit", (event) => {
