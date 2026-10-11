@@ -3,7 +3,8 @@
 const listaGastos = document.querySelector("#lista-gastos");
 const formGasto = document.querySelector("#form-gasto");
 const mensajeError = document.querySelector("#error-form");
-
+const totalGeneral = document.querySelector("#total-general");
+const totalesPorCategoria = document.querySelector("#totales-categoria");
 // ------------------ ESTADO ------------------
 
 let gastos = cargarGastos(); // le asignamos los datos de localStorage, si el mismo esta vacio devolvera []
@@ -43,13 +44,17 @@ function escaparHtml(texto) {
     .replaceAll("'", "&#39;"); // comillas simples
 }
 
-function calcularTotal(gasto) {
-  const total = gasto.reduce((acc, gasto) => acc + gasto.monto, 0)
-  return total 
+function calcularTotal(lista) {
+  let total = lista.reduce((acc, gasto) => acc + gasto.monto, 0);
+  return total;
 }
 
-console.log(calcularTotal(gastos))
-
+function calcularTotalPorCategoria(lista) {
+  return lista.reduce((acc, gasto) => {
+    acc[gasto.categoria] = (acc[gasto.categoria] || 0) + gasto.monto;
+    return acc;
+  }, {});
+}
 // ---------------- PERSISTENCIA --------------
 
 function guardarGastos(lista) {
@@ -99,6 +104,22 @@ function mostrarError(mensajes) {
   mensajeError.textContent = mensajes.join(" ");
 }
 
+function renderResumen(lista) {
+  const total = calcularTotal(lista);
+  totalGeneral.textContent = total;
+
+  const totales = calcularTotalPorCategoria(lista);
+  const items = Object.entries(totales).map(
+    ([categoria, monto]) => `<div class="total-item">
+      <span class="badge badge--${categoria}">${categoria}</span>
+      <span class="total-item__monto">${monto}</span>
+    </div>`,
+  );
+  totalesPorCategoria.innerHTML = items.join("");
+}
+
+
+
 // ------------------ EVENTOS ------------------
 formGasto.addEventListener("submit", (event) => {
   event.preventDefault();
@@ -132,6 +153,8 @@ formGasto.addEventListener("submit", (event) => {
   gastos = [...gastos, nuevoGasto];
   renderLista(gastos); // renderizamos nuevos gastos
 
+  renderResumen(gastos); // renderizamos el total general
+
   guardarGastos(gastos); // guardamos en localStorage los gastos actualizados
 
   formGasto.reset(); // reseteamos los valores por defecto del form luego de agregar el gasto
@@ -151,6 +174,7 @@ listaGastos.addEventListener("click", (event) => {
   if (accionBoton === "eliminar") {
     gastos = gastos.filter((n) => n.id !== botonId);
     renderLista(gastos);
+    renderResumen(gastos);
     guardarGastos(gastos);
   }
 });
@@ -159,3 +183,6 @@ listaGastos.addEventListener("click", (event) => {
 
 // Renderizamos los gastos en la lista-gastos
 renderLista(gastos);
+
+// Rendrizamos total gastos en total-general
+renderResumen(gastos);
